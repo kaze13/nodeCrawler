@@ -47,21 +47,24 @@ var Crawler = function() {
     var links = $('a');
     console.log('Crawling "%s" | %s', title, this.url);
 
-    async.map(links.map(function() {
-        var href = $(this).attr('href');
-        if(href && href != self._url && !(/^#(\w)+/.test(href)) && !util.imageRegexp.test(href)) {
-          if(util.isExternal(href)) {
-            return 'INSERT INTO `queue` SET `id` = \'' + util.id() + '\', `url` = ' + self.conn.escape(href) + ', `from` = ' + self.conn.escape(from);
-          }
-          else {
-            return 'INSERT INTO `queue` SET `id` = \'' + util.id() + '\', `url` = ' + self.conn.escape(util.resolveRelativeURL(href, self._url)) + ', `from` = ' + self.conn.escape(from);
-          }
+    var sqls = links.map(function() {
+      var href = $(this).attr('href');
+      if(href && href != self._url && !(/^#(\w)+/.test(href)) && !util.imageRegexp.test(href)) {
+        if(util.isExternal(href)) {
+          return 'INSERT INTO `queue` SET `id` = \'' + util.id() + '\', `url` = ' + self.conn.escape(href) + ', `from` = ' + self.conn.escape(from);
         }
-        return false;
-      }).filter(function(el) {
-        return !!el;
-      })
-      , this.conn.query.bind(this.conn), function(e, result) {
+        else {
+          return 'INSERT INTO `queue` SET `id` = \'' + util.id() + '\', `url` = ' + self.conn.escape(util.resolveRelativeURL(href, self._url)) + ', `from` = ' + self.conn.escape(from);
+        }
+      }
+      return undefined;
+    }).filter(function() {
+      return !!this;
+    }).toArray();
+
+
+    async.map(sqls
+      , this.conn.query.bind(this.conn), function(e) {
         if(e) {
           console.log('Error writing queue.');
           console.log(e);
