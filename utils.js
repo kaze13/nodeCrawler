@@ -15,10 +15,13 @@ var Utils = {
                 .replace(path.sep,'/') //replace blackslash with forward slash in Windows
                 .replace(/#(\w)+/,''); //remove URL fragment
     },
+    resolveZhiHuRelativeURL:function(p,url){
+        return url.replace(/\/question\/\d+/g, p);
+    },
     isExternal:function(url){
         return url.match(/^https?/) !== null;
     },
     imageRegexp: new RegExp("("+['\\.png','\\.jpg','\\.gif','\\.bmp','\\.psd'].join('|')+")$","i")
 };
  
-module.exports = Utils
+module.exports = Utils;

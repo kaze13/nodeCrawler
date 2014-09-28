@@ -4,7 +4,8 @@
 		"port":3306,
 		"user":"root",
 		"password":"171717",
-		"database":"crawler"
+		"database":"zhihu",
+    "multipleStatements":true
 	},
-	"baseSite":"http://s3131212.com/links/"
+	"baseSite":"http://www.zhihu.com/question/25553432"
 }
