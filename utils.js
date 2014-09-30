@@ -1,5 +1,3 @@
-var path = require('path');
- 
 var Utils = {
     id:function(){
         var ret = '';
@@ -8,20 +6,9 @@ var Utils = {
         }
         return ret;
     },
-    resolveRelativeURL:function(p,url){
-        var proto = url.match(/^https?/)[0]; //extract the protocol out
-        url = url.replace(/^https?:\/\//,''); //remove the protocol
-        return proto+'://'+path.normalize(url+'/'+p) //find out the absolute URL
-                .replace(path.sep,'/') //replace blackslash with forward slash in Windows
-                .replace(/#(\w)+/,''); //remove URL fragment
-    },
     resolveZhiHuRelativeURL:function(p,url){
         return url.replace(/\/question\/\d+/g, p);
-    },
-    isExternal:function(url){
-        return url.match(/^https?/) !== null;
-    },
-    imageRegexp: new RegExp("("+['\\.png','\\.jpg','\\.gif','\\.bmp','\\.psd'].join('|')+")$","i")
+    }
 };
  
 module.exports = Utils;
